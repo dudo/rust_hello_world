@@ -1,0 +1,20 @@
+services:
+  cargo: &cargo
+    env_file: .env
+    tty: true
+    stdin_open: true
+    build:
+      context: .
+    entrypoint: cargo
+    command: check
+    volumes:
+      - .:/usr/src/app:delegated
+      - cargo:/usr/local/.cargo
+      - ${LOCAL_DEP_PATH:-..}:/local
+
+  app:
+    <<: *cargo
+    command: exec ruby ./app.rb
+
+volumes:
+  cargo: {}
